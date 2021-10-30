@@ -1,0 +1,51 @@
+#include <Servo.h>
+int position 	= 0;
+int LEDhijau 	= 7;
+int LEDkuning 	= 6;
+int LEDmerah    = 5;
+
+
+int TMP36=A0;
+float temp;
+
+Servo servo1;
+
+void setup()
+{
+  servo1.attach(11);
+  Serial.begin(9600);
+  
+  pinMode(TMP36,INPUT);
+  
+  pinMode(LEDhijau, OUTPUT);
+  pinMode(LEDkuning, OUTPUT);
+  pinMode(LEDmerah, OUTPUT);
+}
+
+void loop()
+{
+  temp=(analogRead(TMP36)*(0.0049)-0.5)*100;
+  servo1.write(position);
+ 
+  if (temp < 35) {
+    leds(LOW);
+    digitalWrite(LEDhijau, HIGH);
+    position = 90;
+  } else if (temp < 37) {
+    leds(LOW);
+    digitalWrite(LEDkuning, HIGH);
+    position = 90; // servo akan bergerak ke 90 derajat
+  } else if (temp > 38) {
+    leds(LOW);
+    digitalWrite(LEDmerah, HIGH);
+    position = 0;
+  }
+  
+  delay(2000);
+}
+
+long leds(int custom) {  
+  digitalWrite(LEDhijau, custom);
+  digitalWrite(LEDkuning, custom);
+  digitalWrite(LEDmerah, custom);
+}
